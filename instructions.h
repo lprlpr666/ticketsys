@@ -947,17 +947,16 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
         char from[33],
                 to[33];
         int p_p = 0;
-
-
+        int time_summm;
+        int costsummm;
+        string myout1, myout2;
+        bool pan3 = 0;
         //0   time
         //1   cost
-
-
         while ((tmp = mytoken.nextToken()) != "") {
             if (tmp == "-s") {
                 tmp = mytoken.nextToken();
                 strcpy(from, tmp.c_str());
-
             } else if (tmp == "-t") {
                 tmp = mytoken.nextToken();
                 strcpy(to, tmp.c_str());
@@ -986,18 +985,8 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                 if (tmp == "cost")p_p = 1;
             }
         }
-
-
         sjtu::vector<pairwithtrainandplace> position1 = bpt_train.station_base.find(from);
         sjtu::vector<pairwithtrainandplace> position3 = bpt_train.station_base.find(to);
-        int time_summm;
-        int costsummm;
-
-
-        string myout1, myout2;
-
-
-        bool pan3 = 0;
         sjtu::vector<int> mytr;
         for (int i = 0; i < position1.size(); i++) {
             mytr.push_back(bpt_train.bpt_train.find(position1[i].ID)[0]);
@@ -1007,16 +996,12 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
             if (tmptr.release == 0) {
                 continue;
             }
-            //最后一辆车不行哈
             if (tmptr.stationNUm - 1 == position1[i].pos) {
                 continue;
             }
             Time ini(tmptr.saledatamonth1, tmptr.starttime);
-
-
             int timefront;
             int moneyfront;
-
             if (position1[i].pos == 0) {
                 timefront = 0;
                 moneyfront = 0;
@@ -1024,11 +1009,8 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                 timefront = tmptr.sumtime[position1[i].pos - 1];
                 moneyfront = tmptr.sumprices[position1[i].pos - 1];
             }
-
             ini = ini + timefront;
-
             Time hisleavetime(date, {ini.hour_, ini.minute_});
-
             Time Timefirst(tmptr.saledatamonth1, tmptr.starttime);
             Time Timelast(tmptr.saledatamonth2, tmptr.starttime);
             Timefirst = Timefirst + timefront;
@@ -1039,18 +1021,13 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
             if (hisleavetime > Timelast) {
                 continue;
             }
-
-            Time st(tmptr.saledatamonth1, tmptr.starttime),
-                    ed(tmptr.saledatamonth2, tmptr.starttime);
-
+//            Time firtrtrr(tmptr.saledatamonth1, tmptr.starttime),
+//                    lastrrrr(tmptr.saledatamonth2, tmptr.starttime);
             int days_to = hisleavetime.days_to(Timefirst);
-
             int time_summ;
             int cost_summ;
-
             std::string as1, as2;
             bool pan2 = 0;
-            //一站一站的找
             for (int j = position1[i].pos + 1; j < tmptr.stationNUm; j++) {
                 int time_first = tmptr.sumtime[j - 1] - timefront - tmptr.stopoverTimes[j - 1];
                 int cost_first = tmptr.sumprices[j - 1] - moneyfront;
@@ -1077,7 +1054,6 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                         continue;
                     }
                     if (strcmp(position1[i].ID, (*iter1).ID) == 0) {
-                        //转的车和前面的车是同一辆车
                         iter1++;
                         iter2++;
                         continue;
@@ -1089,11 +1065,8 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                         iter2++;
                         continue;
                     }
-
-
                     Time midtimejudge(date, tmptrs.starttime);
                     int time1;
-                    //第二辆车到中转站的时间
                     int monu1;
                     if ((*iter1).pos == 0) {
                         time1 = 0;
@@ -1122,10 +1095,12 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
 //                        ++iter1;
 //                        iter2++;
 //                        continue;
-//                    }
-
-
-
+//                    }int no = midtimejudge.days_to(Time(tmptrs.saledatamonth1));
+//                    midtimejudge = midtimejudge + time1;
+//                    int time_sum = tmptrs.sumtime[(*iter2).pos - 1] - time1
+//                                   - tmptrs.stopoverTimes[(*iter2).pos - 1] + (midtimejudge - mid_time);
+//                    int time_sum_ = time_sum - (midtimejudge - mid_time);
+//                    int price_sum = tmptrs.sumprices[(*iter2).pos - 1] - monu1;
                     if (midtimejudge < starttrrr) {
                         midtimejudge = starttrrr;
                     }
@@ -1172,14 +1147,8 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                     else {
                         pan = 1;
                     }
-
-
-                    Time x2 = midtimejudge + time_sum_;//到达终点站的时间
-
-
+                    Time x2 = midtimejudge + time_sum_;
                     int seats = 111445144;
-
-
                     everydayticketsys left_temp(ticketbase.query(everydaytrain((*iter1).ID, no)));//no为第二辆车是第几班
 
                     for (int k = (*iter1).pos; k < (*iter2).pos; k++) {
@@ -1194,20 +1163,15 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                     time_s = time_sum;
                     ++iter1;
                     iter2++;
-
                 }
-
                 if (!pan)continue;
                 int time_sums = time_first + time_s;
                 int cost_sums = cost_first + cost_s;
-
-
+//its wrong！！！
 //                if(pan){
 //                    int time_sums = time_first + time_s;
 //                    int cost_sums = cost_first + cost_s;
 //                }
-
-
                 if (pan2) {
                     if (p_p) {
                         if (!(cost_sums < cost_summ || (cost_sums == cost_summ && time_sums < time_summ)))continue;
@@ -1231,6 +1195,20 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                 cost_summ = cost_sums;
             }
             if (!pan2)continue;
+            //下面有问题
+            // if (pan3) {
+            //                if (p_p) {
+            //                    if (!(cost_summ >costsummm || (cost_summ == costsummm && time_summ < time_summm)))continue;
+            //                } else {
+            //                    if (!(time_summ > time_summm || (time_summ == time_summm && cost_summ < costsummm)))continue;
+            //                }
+            //            } else {
+            //                pan3 = 1;
+            //            }
+            //            myout1 = as1;
+            //            myout2 = as2;
+            //            time_summm = time_summ;
+            //            costsummm = cost_summ;
             if (pan3) {
                 if (p_p) {
                     if (!(cost_summ < costsummm || (cost_summ == costsummm && time_summ < time_summm)))continue;
@@ -1246,18 +1224,12 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
             costsummm = cost_summ;
         }
         if (!pan3) {
-            //
-
             cout << "0\n";
             return;
-
-
         }
         std::cout << myout1 << '\n' << myout2 << '\n';
         return;
     }
-
-
     else if (tmp == "buy_ticket") {
         char trainid[21];
         char username[21];
