@@ -52,7 +52,6 @@ public:
 };
 class Time {
 public:
-    int month_;int day_;int hour_;int minute_;
     int days_in_month(int month) const {
         if (month == 4 || month == 6 || month == 9 || month == 11) {
             return 30;
@@ -62,29 +61,38 @@ public:
         }
         else return 31;
     }
+    int month_;int day_;int hour_;int minute_;
     Time(){}
     Time(int month, int day, int hour, int minute): month_(month), day_(day), hour_(hour), minute_(minute) {}
     Time(monthtime m_,daytime d_=daytime()):month_(m_.mm),day_(m_.dd),hour_(d_.hh),minute_(d_.mm){}
-    std::string toString() const {
+    std::string couting() const {
         std::ostringstream oss;
         oss << std::setw(2) << std::setfill('0') << month_ << "-" << std::setw(2) << std::setfill('0') << day_
             << " " << std::setw(2) << std::setfill('0') << hour_ << ":" << std::setw(2) << std::setfill('0') << minute_;
         return oss.str();
     }
     Time operator+(int minutes) const {
-        Time result = *this;
-        result.minute_ += minutes;
-        result.hour_+=result.minute_/60;
-        result.minute_ %= 60;
-        if (result.hour_ >= 24) {
-            result.day_+=result.hour_/24;
-            result.hour_%=24;
-            if (result.day_ > days_in_month(result.month_)) {
-                result.day_ -= days_in_month(result.month_);
-                result.month_++;
+        Time tmp  (*this);
+        tmp.minute_ += minutes;
+        int houradd = tmp.minute_/60;
+        tmp.minute_ =tmp.minute_%60;
+        tmp.hour_+=houradd;
+        if (tmp.hour_ <= 23) {
+            return tmp;
+        }
+        int addday=tmp.hour_/24;
+        tmp.hour_=tmp.hour_%24;
+        tmp.day_+=addday;
+        if(tmp.day_<= days_in_month(tmp.month_)){
+            return tmp;
+        }
+        while(1){
+            tmp.day_-=days_in_month(tmp.month_);
+            tmp.month_++;
+            if(tmp.day_<= days_in_month(tmp.month_)){
+                return tmp;
             }
         }
-        return result;
     }
     Time operator-(int minutes) const {
         Time result(*this);
@@ -146,11 +154,14 @@ public:
     bool operator<(const Time& other) const {
         if (month_ != other.month_) {
             return month_ < other.month_;
-        } else if (day_ != other.day_) {
+        }
+        else if (day_ != other.day_) {
             return day_ < other.day_;
-        } else if (hour_ != other.hour_) {
+        }
+        else if (hour_ != other.hour_) {
             return hour_ < other.hour_;
-        } else {
+        }
+        else {
             return minute_ < other.minute_;
         }
     }

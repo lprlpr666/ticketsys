@@ -598,15 +598,15 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
             int seeaatt = ticketbase.ticket_base_.find({trainidd, days_to})[0];
             everydayticketsys seat = ticketbase.ticket_database.find(seeaatt);
             cout << tmptrain.trainid << ' ' << tmptrain.type << '\n' << tmptrain.stations[0] << " xx-xx xx:xx -> "
-                 << nowtime.toString() << " 0 " << seat.everydayticket[0] << '\n';
+                 << nowtime.couting() << " 0 " << seat.everydayticket[0] << '\n';
             for (int i = 1; i < tmptrain.stationNUm - 1; i++) {
                 nowtime = nowtime + tmptrain.traveltime[i - 1];
-                cout << tmptrain.stations[i] << ' ' << nowtime.toString() << " -> ";
+                cout << tmptrain.stations[i] << ' ' << nowtime.couting() << " -> ";
                 nowtime = nowtime + tmptrain.stopoverTimes[i - 1];
-                cout << nowtime.toString() << ' ' << tmptrain.sumprices[i - 1] << ' ' << seat.everydayticket[i] << '\n';
+                cout << nowtime.couting() << ' ' << tmptrain.sumprices[i - 1] << ' ' << seat.everydayticket[i] << '\n';
             }
             nowtime = nowtime + tmptrain.traveltime[tmptrain.stationNUm - 2];
-            cout << tmptrain.stations[tmptrain.stationNUm - 1] << ' ' << nowtime.toString() << " -> xx-xx xx:xx "
+            cout << tmptrain.stations[tmptrain.stationNUm - 1] << ' ' << nowtime.couting() << " -> xx-xx xx:xx "
                  << tmptrain.sumprices[tmptrain.stationNUm - 2] << " x\n";
         } else {
             Time nowtime(starttime, tmptrain.starttime);
@@ -618,15 +618,15 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                 return;
             }
             cout << tmptrain.trainid << ' ' << tmptrain.type << '\n' << tmptrain.stations[0] << " xx-xx xx:xx -> "
-                 << nowtime.toString() << " 0 " << tmptrain.seatnum << '\n';
+                 << nowtime.couting() << " 0 " << tmptrain.seatnum << '\n';
             for (int i = 1; i < tmptrain.stationNUm - 1; i++) {
                 nowtime = nowtime + tmptrain.traveltime[i - 1];
-                cout << tmptrain.stations[i] << ' ' << nowtime.toString() << " -> ";
+                cout << tmptrain.stations[i] << ' ' << nowtime.couting() << " -> ";
                 nowtime = nowtime + tmptrain.stopoverTimes[i - 1];
-                cout << nowtime.toString() << ' ' << tmptrain.sumprices[i - 1] << ' ' << tmptrain.seatnum << '\n';
+                cout << nowtime.couting() << ' ' << tmptrain.sumprices[i - 1] << ' ' << tmptrain.seatnum << '\n';
             }
             nowtime = nowtime + tmptrain.traveltime[tmptrain.stationNUm - 2];
-            cout << tmptrain.stations[tmptrain.stationNUm - 1] << ' ' << nowtime.toString() << " -> xx-xx xx:xx "
+            cout << tmptrain.stations[tmptrain.stationNUm - 1] << ' ' << nowtime.couting() << " -> xx-xx xx:xx "
                  << tmptrain.sumprices[tmptrain.stationNUm - 2] << " x\n";
         }
 
@@ -677,20 +677,20 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
 //        auto itertravletime=travletime.begin();
 //        auto iterprices=prices.begin();
 //        Time nowtime={starttime,tmptrain.starttime};
-//        cout<<(*iterstation).name<<" xx-xx xx:xx -> "<<nowtime.toString()<<' '<<*iterprices<<' '<<(waaitingfor seat)<<'\n';
+//        cout<<(*iterstation).name<<" xx-xx xx:xx -> "<<nowtime.couting()<<' '<<*iterprices<<' '<<(waaitingfor seat)<<'\n';
 //        for(int i=1;i<=tmptrain.stationNUm-2;i++){
 //            iterstation++;
 //            iterprices++;
 //            nowtime=nowtime+(*itertravletime);
-//            cout<<(*iterstation).name<<' '<<nowtime.toString()<<" -> ";
+//            cout<<(*iterstation).name<<' '<<nowtime.couting()<<" -> ";
 //            nowtime=nowtime+(*iternewstop);
-//            cout<<nowtime.toString()<<' '<<*iterprices<<' '<<(sseeaaatt)<<'\n';
+//            cout<<nowtime.couting()<<' '<<*iterprices<<' '<<(sseeaaatt)<<'\n';
 //            itertravletime++;iternewstop++;
 //        }
 //        iterstation++;
 //        iterprices++;
 //        nowtime=nowtime+(*itertravletime);
-//        cout<<(*iterstation).name<<' '<<nowtime.toString()<<" -> xx-xx xx:xx ";
+//        cout<<(*iterstation).name<<' '<<nowtime.couting()<<" -> xx-xx xx:xx ";
 //        cout<<*iterprices<<" x\n";
     } else if (tmp == "query_ticket") {
         char trainid[21];
@@ -816,8 +816,8 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
             pq tmppq(prioq.top());
             prioq.pop();
             string tmppp = tmppq.trainidd;
-            cout << tmppp << ' ' << from << ' ' << tmppq.leave.toString() << " -> " << to << ' '
-                 << tmppq.arrve.toString() << ' '
+            cout << tmppp << ' ' << from << ' ' << tmppq.leave.couting() << " -> " << to << ' '
+                 << tmppq.arrve.couting() << ' '
                  << tmppq.price << ' ' << tmppq.seats << '\n';
         }
 
@@ -877,7 +877,7 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
 //            while(!prioq.empty()){
 //                pq tmppq(prioq.top());
 //                prioq.pop();
-//                cout<<tmppq.trainidd<<' '<<from.name<<' '<<tmppq.leave.toString()<<" -> "<<tmppq.arrve.toString()<<' '
+//                cout<<tmppq.trainidd<<' '<<from.name<<' '<<tmppq.leave.couting()<<" -> "<<tmppq.arrve.couting()<<' '
 //                <<tmppq.price<<' '<<tmppq.seats<<'\n';
 //            }
 //        }
@@ -935,7 +935,7 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
 //            while(!prioq.empty()){
 //                pq tmppq(prioq.top());
 //                prioq.pop();
-//                cout<<tmppq.trainidd<<' '<<from.name<<' '<<tmppq.leave.toString()<<" -> "<<tmppq.arrve.toString()<<' '
+//                cout<<tmppq.trainidd<<' '<<from.name<<' '<<tmppq.leave.couting()<<" -> "<<tmppq.arrve.couting()<<' '
 //                    <<tmppq.price<<' '<<tmppq.seats<<'\n';
 //            }
 //        }
@@ -1156,8 +1156,8 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                     }
 
                     ans = std::string((*iter1).ID) + " " + std::string(tmptr.stations[j]) + " " +
-                          midtimejudge.toString() + " -> " +
-                          std::string(to) + " " + x2.toString() + " " + std::to_string(price_sum) + " " +
+                          midtimejudge.couting() + " -> " +
+                          std::string(to) + " " + x2.couting() + " " + std::to_string(price_sum) + " " +
                           std::to_string(seats);
                     cost_s = price_sum;
                     time_s = time_sum;
@@ -1187,8 +1187,8 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                 for (int k = position1[i].pos; k < j; k++) {
                     seatsss = std::min(seatsss, left_temp_.everydayticket[k]);
                 }
-                as1 = std::string(position1[i].ID) + " " + std::string(from) + " " + hisleavetime.toString() + " -> " +
-                     std::string(tmptr.stations[j]) + " " + mid_time.toString() + " " + std::to_string(cost_first) +
+                as1 = std::string(position1[i].ID) + " " + std::string(from) + " " + hisleavetime.couting() + " -> " +
+                     std::string(tmptr.stations[j]) + " " + mid_time.couting() + " " + std::to_string(cost_first) +
                      " " + std::to_string(seatsss);
                as2 = ans;
                 time_summ = time_sums;
@@ -1488,18 +1488,18 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
         for (auto iter = vec.begin(); iter != vec.end(); iter++) {
             if ((*iter).state == 1) {
                 cout << "[success] " << (*iter).trainid << ' ' << (*iter).from.name << ' '
-                     << (*iter).leavingtime.toString() << " -> " << (*iter).to.name << ' '
-                     << (*iter).arrivingtime.toString() << ' ' << (*iter).price <<
+                     << (*iter).leavingtime.couting() << " -> " << (*iter).to.name << ' '
+                     << (*iter).arrivingtime.couting() << ' ' << (*iter).price <<
                      ' ' << (*iter).buynum << '\n';
             } else if ((*iter).state == 2) {
                 cout << "[pending] " << (*iter).trainid << ' ' << (*iter).from.name << ' '
-                     << (*iter).leavingtime.toString() << " -> " << (*iter).to.name << ' '
-                     << (*iter).arrivingtime.toString() << ' ' << (*iter).price <<
+                     << (*iter).leavingtime.couting() << " -> " << (*iter).to.name << ' '
+                     << (*iter).arrivingtime.couting() << ' ' << (*iter).price <<
                      ' ' << (*iter).buynum << '\n';
             } else {
                 cout << "[refunded] " << (*iter).trainid << ' ' << (*iter).from.name << ' '
-                     << (*iter).leavingtime.toString() << " -> " << (*iter).to.name << ' '
-                     << (*iter).arrivingtime.toString() << ' ' << (*iter).price <<
+                     << (*iter).leavingtime.couting() << " -> " << (*iter).to.name << ' '
+                     << (*iter).arrivingtime.couting() << ' ' << (*iter).price <<
                      ' ' << (*iter).buynum << '\n';
             }
         }

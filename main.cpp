@@ -12,6 +12,8 @@
 #include "instructions.h"
 #include "map.h"
 int main() {
+//         freopen("1.in", "r", stdin);
+//     freopen("1.out", "w", stdout);
     start();
     return 0;
 }
