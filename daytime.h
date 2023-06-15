@@ -52,105 +52,22 @@ public:
 };
 class Time {
 public:
-    int days_in_month(int month) const {
-        if (month == 4 || month == 6 || month == 9 || month == 11) {
-            return 30;
-        }
-        else if(month==2){
-            return 28;
-        }
-        else return 31;
-    }
     int month_;int day_;int hour_;int minute_;
+    Time operator=(const Time &other){
+        month_=other.month_;
+        day_=other.day_;
+        hour_=other.hour_;
+        minute_=other.minute_;
+        return *this;
+    }
     Time(){}
     Time(int month, int day, int hour, int minute): month_(month), day_(day), hour_(hour), minute_(minute) {}
     Time(monthtime m_,daytime d_=daytime()):month_(m_.mm),day_(m_.dd),hour_(d_.hh),minute_(d_.mm){}
-    std::string couting() const {
-        std::ostringstream oss;
-        oss << std::setw(2) << std::setfill('0') << month_ << "-" << std::setw(2) << std::setfill('0') << day_
-            << " " << std::setw(2) << std::setfill('0') << hour_ << ":" << std::setw(2) << std::setfill('0') << minute_;
-        return oss.str();
-    }
-    Time operator+(int minutes) const {
-        Time tmp  (*this);
-        tmp.minute_ += minutes;
-        int houradd = tmp.minute_/60;
-        tmp.minute_ =tmp.minute_%60;
-        tmp.hour_+=houradd;
-        if (tmp.hour_ <= 23) {
-            return tmp;
-        }
-        int addday=tmp.hour_/24;
-        tmp.hour_=tmp.hour_%24;
-        tmp.day_+=addday;
-        if(tmp.day_<= days_in_month(tmp.month_)){
-            return tmp;
-        }
-        while(1){
-            tmp.day_-=days_in_month(tmp.month_);
-            tmp.month_++;
-            if(tmp.day_<= days_in_month(tmp.month_)){
-                return tmp;
-            }
-        }
-    }
-    Time operator-(int minutes) const {
-        Time result(*this);
-        int borrow_minutes = minutes % (24 * 60);
-        int borrow_days = minutes / (24 * 60);
-        int borrow_hour = borrow_minutes / 60;
-        int borrow_minute = borrow_minutes % 60;
-        result.minute_ -= borrow_minute;
-        if (result.minute_ < 0) {
-            result.minute_ += 60;
-            borrow_hour++;
-        }
-        result.hour_ -= borrow_hour;
-        if (result.hour_ < 0) {
-            result.hour_ += 24;
-            borrow_days++;
-        }
-        while (borrow_days > 0) {
-            int days_in_prev_month = days_in_month(result.month_ - 1);
-            if (result.day_ <= borrow_days) {
-                borrow_days -= result.day_;
-                result.month_--;
-                if (result.month_ == 0) {
-                    result.month_ = 12;
-                    result.day_ = days_in_month(result.month_) - borrow_days % days_in_prev_month;
-                } else {
-                    result.day_ = days_in_month(result.month_);
-                }
-            } else {
-                result.day_ -= borrow_days;
-                borrow_days = 0;
-            }
-        }
-        return result;
-    }
-    int operator-(const Time& other) const {
-        int days=0;
-        if(month_!=other.month_){
-            for(int i=other.month_+1;i<=month_-1;i++)
-                days+=days_in_month(i);
-            days+=days_in_month(other.month_)-other.day_;
-            days+=day_;
-        }
-        else days=day_-other.day_;
-        int minutes = days * 24 * 60 + (hour_ - other.hour_) * 60 + (minute_ - other.minute_);
-        return minutes;
-    }
-    int days_to(const Time& other){
-        int days=0;
-        if(month_!=other.month_){
-            for(int i=other.month_+1;i<=month_-1;i++)
-                days+=days_in_month(i);
-            days+=days_in_month(other.month_)-other.day_;
-            days+=day_;
-        }
-        else days=day_-other.day_;
-        return days;
-    }
+    std::string couting() const;
+    Time operator+(int minutes) const ;
+    Time operator-(int minutes) const ;
+    int operator-(const Time& other) const;
+    int days_to(const Time& other);
     bool operator<(const Time& other) const {
         if (month_ != other.month_) {
             return month_ < other.month_;
@@ -180,14 +97,158 @@ public:
     bool operator>=(const Time& other) const {
         return *this > other || *this == other;
     }
-    Time operator=(const Time &other){
-        month_=other.month_;
-        day_=other.day_;
-        hour_=other.hour_;
-        minute_=other.minute_;
-        return *this;
-    }
+
 
 
 };
+
+Time Time::operator+(int minutes) const {
+    Time tmp  (*this);
+    tmp.minute_ += minutes;
+    int houradd = tmp.minute_/60;
+    tmp.minute_ =tmp.minute_%60;
+    tmp.hour_+=houradd;
+    if (tmp.hour_ <= 23) {
+        return tmp;
+    }
+    int addday=tmp.hour_/24;
+    tmp.hour_=tmp.hour_%24;
+    tmp.day_+=addday;
+    while(1){
+        switch (tmp.month_) {
+            case 5:
+                if(tmp.day_>31){
+                    tmp.month_++;
+                    tmp.day_-=31;
+                }
+                else{
+                    return tmp;
+                }
+            case 6:
+                if(tmp.day_>30){
+                    tmp.month_++;
+                    tmp.day_-=30;
+                }
+                else{
+                    return tmp;
+                }
+            case 7:
+                if(tmp.day_>31){
+                    tmp.month_++;
+                    tmp.day_-=31;
+                }
+                else{
+                    return tmp;
+                }
+            case 8:
+                if(tmp.day_>31){
+                    tmp.month_++;
+                    tmp.day_-=31;
+                }
+                else{
+                    return tmp;
+                }
+            case 9:
+                if(tmp.day_>30){
+                    tmp.month_++;
+                    tmp.day_-=30;
+                }
+                else{
+                    return tmp;
+                }
+            case 10:
+                if(tmp.day_>31){
+                    tmp.month_++;
+                    tmp.day_-=31;
+                }
+                else{
+                    return tmp;
+                }
+            case 11:
+                if(tmp.day_>30){
+                    tmp.month_++;
+                    tmp.day_-=30;
+                }
+                else{
+                    return tmp;
+                }
+            case 12:
+                if(tmp.day_>31){
+                    tmp.month_++;
+                    tmp.day_-=31;
+                }
+                else{
+                    return tmp;
+                }
+        }
+    }
+}
+
+std::string Time::couting() const {
+    std::ostringstream oss;
+    oss << std::setw(2) << std::setfill('0') << month_ << "-" << std::setw(2) << std::setfill('0') << day_
+        << " " << std::setw(2) << std::setfill('0') << hour_ << ":" << std::setw(2) << std::setfill('0') << minute_;
+    return oss.str();
+}
+
+Time Time::operator-(int minutes) const {
+        Time result(*this);
+        int borrow_minutes = minutes % (24 * 60);
+        int borrow_days = minutes / (24 * 60);
+        int borrow_hour = borrow_minutes / 60;
+        int borrow_minute = borrow_minutes % 60;
+        result.minute_ -= borrow_minute;
+        if (result.minute_ < 0) {
+            result.minute_ += 60;
+            borrow_hour++;
+        }
+        result.hour_ -= borrow_hour;
+        if (result.hour_ < 0) {
+            result.hour_ += 24;
+            borrow_days++;
+        }
+        while (borrow_days > 0) {
+            int days_in_prev_month = getmonday(result.month_ - 1);
+            if (result.day_ <= borrow_days) {
+                borrow_days -= result.day_;
+                result.month_--;
+                if (result.month_ == 0) {
+                    result.month_ = 12;
+                    result.day_ = getmonday(result.month_) - borrow_days % days_in_prev_month;
+                } else {
+                    result.day_ = getmonday(result.month_);
+                }
+            } else {
+                result.day_ -= borrow_days;
+                borrow_days = 0;
+            }
+        }
+        return result;
+}
+
+int Time::operator-(const Time &other) const {
+    int days=0;
+    if(month_!=other.month_){
+        for(int i=other.month_+1;i<=month_-1;i++)
+            days+=getmonday(i);
+        days+=getmonday(other.month_)-other.day_;
+        days+=day_;
+    }
+    else days=day_-other.day_;
+    int minutes = days * 24 * 60 + (hour_ - other.hour_) * 60 + (minute_ - other.minute_);
+    return minutes;
+}
+
+int Time::days_to(const Time &other) {
+    int days=0;
+    if(month_!=other.month_){
+        for(int i=other.month_+1;i<=month_-1;i++)
+            days+=getmonday(i);
+        days+=getmonday(other.month_)-other.day_;
+        days+=day_;
+    }
+    else days=day_-other.day_;
+    return days;
+}
+
 #endif //CODE_DAYTIME_H

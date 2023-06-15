@@ -29,16 +29,16 @@ void start(){
     bpt_seaat.setfile("seat.db");
     station_to_trainid.setfile("station_to_train.db");
     bpt_history_order.setfile("history.db");
-        std::string inlinestring;
-        while(getline(std::cin, inlinestring)) {
-            strp++;
-            processing(inlinestring,usership,ticketbase,bpt_train);
-            if(ifout) {
-                ifout = 0;
-                cout << "bye" << endl;
-                return;
-            }
+    std::string inlinestring;
+    while(getline(std::cin, inlinestring)) {
+        strp++;
+        processing(inlinestring,usership,ticketbase,bpt_train);
+        if(ifout) {
+            ifout = 0;
+            cout << "bye" << endl;
+            return;
         }
+    }
 };
 class pq{
 public:
@@ -777,8 +777,9 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
             Time now(date, {firsttrian.hour_, firsttrian.minute_});
             Time arrve;
             if (((*iterto).pos + 1) != tmptr.stationNUm) {
-                arrve = now + totaltime - tmptr.stopoverTimes[(*iterto).pos - 1];
                 totaltime = totaltime - tmptr.stopoverTimes[(*iterto).pos - 1];
+                arrve = now + totaltime;
+                
             } else {
                 arrve = now + totaltime;
             }
@@ -1188,9 +1189,9 @@ void processing(string &s, user &usership, ticket_base &ticketbase, traindatabas
                     seatsss = std::min(seatsss, left_temp_.everydayticket[k]);
                 }
                 as1 = std::string(position1[i].ID) + " " + std::string(from) + " " + hisleavetime.couting() + " -> " +
-                     std::string(tmptr.stations[j]) + " " + mid_time.couting() + " " + std::to_string(cost_first) +
-                     " " + std::to_string(seatsss);
-               as2 = ans;
+                      std::string(tmptr.stations[j]) + " " + mid_time.couting() + " " + std::to_string(cost_first) +
+                      " " + std::to_string(seatsss);
+                as2 = ans;
                 time_summ = time_sums;
                 cost_summ = cost_sums;
             }
